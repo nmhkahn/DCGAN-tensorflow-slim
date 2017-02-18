@@ -1,3 +1,4 @@
+import os
 import time
 import scipy.misc
 import numpy as np
@@ -13,6 +14,9 @@ class Trainer(object):
         self.global_step = tf.Variable(0, name="global_step")
         self.model = self._build_model(filename_queue, config)
         self.saver = tf.train.Saver()
+
+        if not os.path.exists(config.sampledir):
+            os.makedirs(config.sampledir)
 
         # TODO: histogram summaries of z, D_real, D_fake and G
         self.loss_summaries = tf.summary.merge([
@@ -85,9 +89,8 @@ class Trainer(object):
 
     def fit(self):
         config = self.config
-
-        t1 = time.time()
         for step in range(config.max_steps):
+            t1 = time.time()
             z = ops.generate_z(config.batch_size, config.z_dim)
 
             # train discriminator
@@ -102,6 +105,7 @@ class Trainer(object):
             # followed by https://github.com/carpedm20/DCGAN-tensorflow/
             self.sess.run(self.model["opt_G"],
                 feed_dict={self.model["z"]: z, self.model["is_training"]: True})
+            t2 = time.time()
 
             if (step+1) % config.summary_every_n_steps == 0:
                 summary_feed_dict = {
@@ -110,12 +114,13 @@ class Trainer(object):
                 self.make_summary(summary_feed_dict, step+1)
 
             if (step+1) % config.sample_every_n_steps == 0:
-                t2 = time.time()
-                print("Sample image at {} step {:.2f}s".format(step+1,t2-t1))
+                eta = (t2-t1)*(config.max_steps-step+1)
+                print("Finished {}/{} step, ETA:{:.2f}s"
+                      .format(step+1, config.max_steps, eta), end="\r")
+
                 _, gen = self.sample(1)
-                # TODO: check directory exist before save
-                scipy.misc.imsave("example/"+str(step+1)+".jpg", gen[0])
-                t1 = time.time()
+                imname = os.path.join(config.sampledir, str(step+1)+".jpg")
+                scipy.misc.imsave(imname, gen[0])
 
     def sample(self, sample_size):
         config = self.config
