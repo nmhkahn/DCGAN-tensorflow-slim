@@ -1,4 +1,5 @@
 log/
+ckpts/
 example/
 *.DS_Store
 *.pyc
