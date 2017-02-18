@@ -1,7 +1,6 @@
 # DCGAN in tensorflow-slim
 
 Implementation of [DCGAN](https://arxiv.org/abs/1511.06434) with [TensorFlow slim](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/slim). Base codes and models are from [DCGAN in Tensorflow](https://github.com/carpedm20/DCGAN-tensorflow) made by Taehoon Kim.
-
 At this time, this code only support **Flower** dataset, but maybe with some tweaks you can train/evaluate in other dataset.
 
 I know there are lots of code of DCGAN, especially made by Taehoon Kim. However, this code implement DCGAN with the bleeding edges features of TensorFlow such as TF-Slim, `tf.train.Supervisor` and `TFRecords` etc.
@@ -14,6 +13,15 @@ I know there are lots of code of DCGAN, especially made by Taehoon Kim. However,
 - Only tested in Python 3.3
 
 ## Basic usages
+Before train model, we have to convert dataset into `TFRecords` file format. To do that, first download Flower dataset and then convert (also you can use other dataset such as MNIST or CIFAR-10).
+```
+$ cd dataset
+$ sh download_flowers.sh
+# if you use other dataset, you might change provided code.
+$ python3 convert_flowers.py 
+```
+Above instructions will make `flowers.tfrecords` file in `dataset` directory.
+
 To train model,
 ```shell
 $ python3 dcgan/train.py
