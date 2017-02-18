@@ -119,16 +119,18 @@ class Trainer(object):
 
     def sample(self, sample_size):
         config = self.config
-
         z = ops.generate_z(sample_size, config.z_dim)
+
+        return z, self.sample_with_given_z(z)
+
+    def sample_with_given_z(self, z):
         gen = self.sess.run(self.model["G"],
             feed_dict={self.model["z"]: z, self.model["is_training"]: False})
 
-        return z, (gen+1)/2.0
+        return (gen+1) / 2.0
 
     def make_summary(self, feed_dict, step):
         summary = self.sess.run(self.loss_summaries, feed_dict=feed_dict)
-        # self.summary_writer.add_summary(summary, global_step=step)
         self.sv.summary_computed(self.sess, summary, step)
 
     # TODO: maybe have to handle shuffle args?

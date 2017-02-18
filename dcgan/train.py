@@ -1,7 +1,10 @@
-import trainer
 import config
+import trainer
 
-cfg = config.Config(filename_queue="dataset/flowers.tfrecords")
-t = trainer.Trainer(cfg)
+def main():
+    cfg = config.Config(filename_queue="dataset/flowers.tfrecords")
+    t = trainer.Trainer(cfg)
+    t.fit()
 
-t.fit()
+if __name__ == "__main__":
+    main()
