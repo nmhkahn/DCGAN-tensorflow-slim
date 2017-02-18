@@ -7,10 +7,10 @@ I know there are lots of code of DCGAN, especially made by Taehoon Kim. However,
 
 ## Requirements
 
-- TensorFlow
+- TensorFlow **1.0**
 - SciPy
 - NumPy
-- Only tested in Python 3.3
+- Only tested in Python 3.4
 
 ## Basic usages
 Before train model, we have to convert dataset into `TFRecords` file format. To do that, first download Flower dataset and then convert (also you can use other dataset such as MNIST or CIFAR-10).
