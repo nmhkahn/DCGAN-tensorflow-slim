@@ -47,12 +47,8 @@ def generator(z, is_training, y=None, scope=None):
         end_pts_collection = scp.name+"end_pts"
         with slim.arg_scope(gen_arg_scope(is_training, end_pts_collection)):
             net = slim.fully_connected(z, 4*4*512,
-                                       activation_fn=None,
-                                       normalizer_fn=None,
-                                       normalizer_params=None,
                                        scope="projection")
             net = tf.reshape(net, [-1, 4, 4, 512])
-            #TODO: add ReLU and bn
             net = slim.conv2d_transpose(net, 256, scope="conv_tp0")
             net = slim.conv2d_transpose(net, 128, scope="conv_tp1")
             net = slim.conv2d_transpose(net, 64, scope="conv_tp2")
