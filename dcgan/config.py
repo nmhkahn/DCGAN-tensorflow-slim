@@ -10,6 +10,7 @@ class Config(object):
 
         # configuration for the supervisor
         self.logdir = kwargs.get("logdir", "./log")
+        self.sampledir = kwargs.get("sampledir", "./example")
 
         self.max_steps = kwargs.get("max_steps", 100000)
         self.sample_every_n_steps = kwargs.get("sample_every_n_steps", 500)
