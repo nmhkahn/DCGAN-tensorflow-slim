@@ -13,7 +13,7 @@ class Config(object):
         self.sampledir = kwargs.get("sampledir", "./example")
 
         self.max_steps = kwargs.get("max_steps", 100000)
-        self.sample_every_n_steps = kwargs.get("sample_every_n_steps", 500)
+        self.sample_every_n_steps = kwargs.get("sample_every_n_steps", 1000)
         self.summary_every_n_steps = kwargs.get("summary_every_n_steps", 10)
         self.save_model_secs = kwargs.get("save_model_secs", 1200)
         self.checkpoint_basename = kwargs.get("checkpoint_basename", "dcgan")

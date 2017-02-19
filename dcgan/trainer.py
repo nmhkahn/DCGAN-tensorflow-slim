@@ -118,9 +118,11 @@ class Trainer(object):
                 print("Finished {}/{} step, ETA:{:.2f}s"
                       .format(step+1, config.max_steps, eta), end="\r")
 
-                _, gen = self.sample(1)
-                imname = os.path.join(config.sampledir, str(step+1)+".jpg")
-                scipy.misc.imsave(imname, gen[0])
+                _, gen = self.sample(10)
+                for i in range(10):
+                    imname = os.path.join(config.sampledir, 
+                                          str(step+1)+"_"+str(i+1)+".jpg")
+                    scipy.misc.imsave(imname, gen[i])
 
     def sample(self, sample_size):
         config = self.config
