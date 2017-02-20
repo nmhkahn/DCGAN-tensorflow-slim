@@ -3,8 +3,8 @@ slim = tf.contrib.slim
 
 import ops
 
-def gen_arg_scope(is_training=True, outputs_collections=None):
-    batch_norm_params = {
+def batch_norm_params(is_training):
+    return {
         "decay": 0.9,
         "epsilon": 1e-5,
         "scale": True,
@@ -12,11 +12,13 @@ def gen_arg_scope(is_training=True, outputs_collections=None):
         "is_training": is_training
     }
 
+
+def gen_arg_scope(is_training=True, outputs_collections=None):
     with slim.arg_scope([slim.conv2d_transpose, slim.fully_connected],
         weights_initializer=tf.truncated_normal_initializer(stddev=0.02),
         activation_fn=tf.nn.relu,
         normalizer_fn=slim.batch_norm,
-        normalizer_params=batch_norm_params,
+        normalizer_params=batch_norm_params(is_training),
         outputs_collections=outputs_collections):
         with slim.arg_scope([slim.conv2d_transpose],
             kernel_size=[5, 5], stride=2, padding="SAME") as arg_scp:
@@ -24,19 +26,11 @@ def gen_arg_scope(is_training=True, outputs_collections=None):
 
 
 def disc_arg_scope(is_training=True, outputs_collections=None):
-    batch_norm_params = {
-        "decay": 0.9,
-        "epsilon": 1e-5,
-        "scale": True,
-        "updates_collections": None,
-        "is_training": is_training
-    }
-
     with slim.arg_scope([slim.conv2d],
         weights_initializer=tf.truncated_normal_initializer(stddev=0.02),
         activation_fn=ops.lrelu,
         normalizer_fn=slim.batch_norm,
-        normalizer_params=batch_norm_params,
+        normalizer_params=batch_norm_params(is_training),
         kernel_size=[5, 5], stride=2, padding="SAME",
         outputs_collections=outputs_collections) as arg_scp:
         return arg_scp
@@ -47,8 +41,12 @@ def generator(z, is_training, y=None, scope=None):
         end_pts_collection = scp.name+"end_pts"
         with slim.arg_scope(gen_arg_scope(is_training, end_pts_collection)):
             net = slim.fully_connected(z, 4*4*512,
+                                       normalizer_fn=None,
+                                       normalizer_params=None,
                                        scope="projection")
             net = tf.reshape(net, [-1, 4, 4, 512])
+            net = slim.batch_norm(net, scope="batch_norm",
+                                  **batch_norm_params(is_training))
             net = slim.conv2d_transpose(net, 256, scope="conv_tp0")
             net = slim.conv2d_transpose(net, 128, scope="conv_tp1")
             net = slim.conv2d_transpose(net, 64, scope="conv_tp2")
