@@ -10,17 +10,20 @@ I know there are lots of code of DCGAN, especially made by Taehoon Kim. However,
 - TensorFlow **1.0**
 - SciPy
 - NumPy
+- wget (Python library)
 - Only tested in Python 3.4
 
 ## Basic usages
 Before train model, we have to convert dataset into `TFRecords` file format. To do that, first download Flower dataset and then convert (also you can use other dataset such as MNIST or CIFAR-10).
-```
+```shell
 $ cd dataset
-$ sh download_flowers.sh
-# if you use other dataset, you might change provided code.
-$ python3 convert_flowers.py 
+# for flower dataset
+$ python download_and_convert.py flowers
+# for celebA dataset
+$ python download_and_convert.py celebA
+# if you want to use other dataset, you might change provided code.
 ```
-Above instructions will make `flowers.tfrecords` file in `dataset` directory.
+Above instructions will make `flowers.tfrecords` or `celeba.tfrecords` file in `dataset` directory.
 
 To train model,
 ```shell
@@ -37,8 +40,8 @@ Note that checkpoint files must be located in `logdir` directory. See `dcgan/tra
 ## Results
 Below examples are randomly selected from model with trained around 60k steps.
 
-![img1](assets/img1.jpg)
-![img2](assets/img2.jpg)
+![flower_result1](assets/img1.jpg)
+![flower_result2](assets/img2.jpg)
 
 Some flowers looks fine, but most of images are bad. I believe that this is because Flower dataset has lots of noises, however on the other side, DCGAN's capacity doesn't enough to handle noisy images.
 
